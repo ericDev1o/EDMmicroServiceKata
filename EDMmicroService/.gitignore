@@ -1,0 +1,10 @@
+# compiled #
+*obj*
+*bin*
+*.dll
+*.cache
+# configuration #
+.vscode*
+*.json
+*.sln
+.editorconfig
