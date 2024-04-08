@@ -28,6 +28,7 @@ Eric
 dév. C#.net / intégrateur web React
 
 # How
+## monolith
 https://dotnet.microsoft.com/en-us/learn/aspnet/microservice-tutorial/intro
 
 dotnet publish --os linux --arch x64 /t:PublishContainer -c Release
@@ -46,7 +47,7 @@ docker run -it --rm -p 3000:8080 --name edmmicroservicecontainer edmmicroservice
 
 http://localhost:3000/findDocument
 
-## trace
+### trace
 PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService> docker build -t edmmicroservice .
 [+] Building 138.8s (15/15) FINISHED                                                                                                                 docker:default 
  => [internal] load build definition from Dockerfile                                                                                                           1.3s 
@@ -126,3 +127,125 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /app
 warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
       Failed to determine the https port for redirect.
+
+## backend - frontend split
+### trace
+#### backend
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM> dotnet clean .\BackendEDM.csproj
+MSBuild version 17.9.6+a4ecab324 for .NET
+Build started 08/04/2024 11:51:01.
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)  
+
+Time Elapsed 00:00:00.80
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM> dotnet build -c release .\BackendEDM.csproj
+MSBuild version 17.9.6+a4ecab324 for .NET
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  BackendEDM -> C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM\bin\release\net8.0\BackendEDM.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:02.19
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM> dotnet run -c release --no-restore --no-build .\BackendEDM.csproj
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5173
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+
+#### frontend
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM> dotnet clean .\FrontendEDM.csproj
+MSBuild version 17.9.6+a4ecab324 for .NET
+Build started 08/04/2024 11:45:41.
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.03
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM> dotnet build -c release .\FrontendEDM.csproj
+MSBuild version 17.9.6+a4ecab324 for .NET
+  Determining projects to restore...
+  Restored C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM\FrontendEDM.csproj (in 590 ms).
+  FrontendEDM -> C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM\bin\release\net8.0\FrontendEDM.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:08.07
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM> dotnet run -c release .\FrontendEDM.csproj  
+Building...
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5062
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+
+#### Docker
+##### frontend
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM> dotnet publish /p:PublishProfile=DefaultContainer .\FrontendEDM.csproj
+MSBuild version 17.9.6+a4ecab324 for .NET
+  Determining projects to restore...
+  Restored C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM\FrontendEDM.csproj (in 884 ms).
+  FrontendEDM -> C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM\bin\Release\net8.0\FrontendEDM.dll
+  FrontendEDM -> C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM\bin\Release\net8.0\publish\
+  Building image 'frontendedm' with tags 'latest' on top of base image 'mcr.microsoft.com/dotnet/aspnet:8.0'.
+  Pushed image 'frontendedm:latest' to local registry via 'docker'.
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\FrontendEDM> 
+
+##### backend
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM> dotnet publish /p:PublishProfile=DefaultContainer
+MSBuild version 17.9.6+a4ecab324 for .NET
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  BackendEDM -> C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM\bin\Release\net8.0\BackendEDM.dll
+  BackendEDM -> C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM\bin\Release\net8.0\publish\
+  Building image 'backendedm' with tags 'latest' on top of base image 'mcr.microsoft.com/dotnet/aspnet:8.0'.
+  Pushed image 'backendedm:latest' to local registry via 'docker'.
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService\BackendEDM> 
+
+##### compose both services
+PS C:\Users\ericf\source\repos\Kata\Cegedim\EDMmicroService> docker compose up
+[+] Running 3/3
+ ✔ Network edmmicroservice_default       Created                                                                                                             0.4s 
+ ✔ Container edmmicroservice-backend-1   Created                                                                                                             1.1s 
+ ✔ Container edmmicroservice-frontend-1  Created                                                                                                             1.1s 
+Attaching to backend-1, frontend-1
+backend-1   | info: Microsoft.Hosting.Lifetime[14]
+backend-1   |       Now listening on: http://[::]:8080
+backend-1   | info: Microsoft.Hosting.Lifetime[0]     
+backend-1   |       Application started. Press Ctrl+C to shut down.
+backend-1   | info: Microsoft.Hosting.Lifetime[0]  
+backend-1   |       Hosting environment: Production
+backend-1   | info: Microsoft.Hosting.Lifetime[0]  
+backend-1   |       Content root path: /app
+frontend-1  | warn: Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository[60]
+frontend-1  |       Storing keys in a directory '/home/app/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+frontend-1  | warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[35]
+frontend-1  |       No XML encryptor configured. Key {cbdf0150-60f5-4f37-aaad-08977e141ac9} may be persisted to storage in unencrypted form.
+frontend-1  | info: Microsoft.Hosting.Lifetime[14]
+frontend-1  |       Now listening on: http://[::]:8080
+frontend-1  | info: Microsoft.Hosting.Lifetime[0]
+frontend-1  |       Application started. Press Ctrl+C to shut down.
+frontend-1  | info: Microsoft.Hosting.Lifetime[0]
+frontend-1  |       Hosting environment: Production
+frontend-1  | info: Microsoft.Hosting.Lifetime[0]
+frontend-1  |       Content root path: /app

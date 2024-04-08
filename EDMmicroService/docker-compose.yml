@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+
+  frontend:
+    image: frontendedm:latest
+    environment:
+      - BackendEDMEndpoint=http://backend:8080
+    ports:
+      - "32000:8080"
+    depends_on:
+      - backend
+
+  backend:
+    image: backendedm:latest
+    ports:
+      - "32001:8080"

@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY EDMmicroService.csproj .
+COPY FrontendEDM.csproj .
 RUN dotnet restore
 COPY . .
 RUN dotnet publish -c release -o /app
@@ -8,4 +8,4 @@ RUN dotnet publish -c release -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["dotnet", "EDMmicroService.dll"]
+ENTRYPOINT ["dotnet", "FrontendEDM.dll"]
