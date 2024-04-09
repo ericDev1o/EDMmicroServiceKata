@@ -1,6 +1,12 @@
 @backend_HostAddress = http://localhost:5173
 
-GET {{backend_HostAddress}}/weatherforecast/
-Accept: application/json
-
 ###
+POST {{backend_HostAddress}}/files
+content-type: application/json
+{
+    "Date": "2024-04-09",
+    "FileType": "PDF"
+}
+###
+GET {{backend_HostAddress}}/
+Accept: application/json
