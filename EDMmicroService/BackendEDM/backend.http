@@ -4,9 +4,20 @@
 POST {{backend_HostAddress}}/files
 content-type: application/json
 {
-    "Date": "2024-04-09",
-    "FileType": "PDF"
+    "Id": 1,
+    "Name": "TestFile1",
+    "DueDate": "2024-04-09",
+    "FileType": "PDF",
+    "IsIndexed": false
 }
 ###
 GET {{backend_HostAddress}}/
 Accept: application/json
+
+GET {{backend_HostAddress}}/files
+Accept: application/json
+
+GET {{backend_HostAddress}}/documents/1
+Accept: application/json
+###
+DELETE {{backend_HostAddress}}/files/1
