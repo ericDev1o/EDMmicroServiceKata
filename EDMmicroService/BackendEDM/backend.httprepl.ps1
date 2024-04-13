@@ -2,4 +2,4 @@
 
 # dotnet tool install -g Microsoft.dotnet-httprepl
 
-httprepl http://localhost:5173 --verbose
+httprepl http://localhost:5173 --verbose --openapi /swagger/v1/swagger.json

@@ -17,6 +17,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+/// <summary> Example domain </summary>
 var fileTypes = new[]
 {
     "PDF", "ODT", "ODS", "ODP", "ODG", "ODF"
