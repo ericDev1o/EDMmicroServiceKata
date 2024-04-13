@@ -42,6 +42,12 @@ app.MapPost("/files", (File file, IFileService service) =>
     service.AddFile(file);
     return TypedResults.Created("/files/{id}", file);
 })
+.WithOpenApi(operation => new(operation)
+{
+    Summary = "This is the file creation endpoint."
+})
+.WithTags("Post")
+.Accepts<File>("application/json")
 .AddEndpointFilter(async (context, next) =>
 {
     var fileArgument = context.GetArgument<File>(0);
@@ -90,7 +96,12 @@ app.MapGet("/", () =>
     .ToArray();
     return file;
 }).WithName("GetAllFileTypes")
-.WithOpenApi();
+.WithOpenApi(operation => new(operation)
+{
+    Summary = "This is the file type query endpoint."
+})
+.WithTags("Get")
+.Produces<int>(StatusCodes.Status200OK);
 
 app.MapGet("/randomFileTypes", () =>
 {
@@ -106,9 +117,20 @@ app.MapGet("/randomFileTypes", () =>
     .ToArray();
     return file;
 }).WithName("GetRandomFileTypes")
-.WithOpenApi();
+.WithOpenApi(operation => new(operation)
+{
+    Summary = "This is the random file type query endpoint."
+})
+.WithTags("Get")
+.Produces<int>(StatusCodes.Status200OK);
 
-app.MapGet("/files", (IFileService service) => service.GetFiles());
+app.MapGet("/files", (IFileService service) => service.GetFiles())
+.WithOpenApi(operation => new(operation)
+{
+    Summary = "This is the file query endpoint."
+})
+.WithTags("Get")
+.Produces<int>(StatusCodes.Status200OK);;
 #endregion
 
 #region DELETE
